@@ -1,58 +1,91 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { BadgeCheck, ArrowRight } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
-import { ArrowRight, ShieldCheck, Mic, Sparkles, Send } from 'lucide-react';
 
 const LANG_COPY = {
   tanglish: {
+    eyebrow: 'SHARE YOUR EXPERIENCE',
     question: 'Ungal experience eppadi irunthuchu?',
-    ctaHigh: 'Continue & Write AI Review',
-    ctaLow: 'Send Private Feedback to Owner',
-    labels: {
-      5: '5.0 ★ — Super! Romba Pudichiruku',
-      4: '4.0 ★ — Nalla Irunthuchu!',
-      3: '3.0 ★ — Okay, Improve Pannalam',
-      2: '2.0 ★ —Konjam Disappointed',
-      1: '1.0 ★ — Romba Mosam, Sorry'
-    }
+    moods: { good: 'Good', average: 'Average', bad: 'Bad' },
+    status: {
+      5: '5.0 — Super! Romba pudichiruku',
+      4: '4.0 — Nalla irunthuchu!',
+      3: '3.0 — Paravala, improve pannalam',
+      2: '2.0 — Konjam disappointed',
+      1: '1.0 — Sorry! Direct-ah owner kitta sollunga'
+    },
+    ctaHigh: 'Continue with Kural AI',
+    ctaLow: 'Send Private Feedback',
+    footerPrefix: 'Speak naturally in Tamil, Tanglish, or English — ',
+    footerBold: 'Kural turns your voice into a polished Google Review in 10 seconds.',
+    meta: ['Voice or Tap', 'No Login Required', 'Kural (குரல்)']
   },
   tamil: {
+    eyebrow: 'உங்கள் அனுபவத்தைப் பகிரவும்',
     question: 'உங்கள் அனுபவம் எப்படி இருந்தது?',
-    ctaHigh: 'தொடர்ந்து AI Review எழுதவும்',
-    ctaLow: 'கடை உரிமையாளருக்கு நேரடியாக தெரிவிக்கவும்',
-    labels: {
-      5: '5.0 ★ — அருமை! மிகவும் பிடித்தது',
-      4: '4.0 ★ — நன்றாக இருந்தது!',
-      3: '3.0 ★ — பரவாயில்லை, மேம்படுத்தலாம்',
-      2: '2.0 ★ — சற்று ஏமாற்றம்',
-      1: '1.0 ★ — மிகவும் மோசம்'
-    }
+    moods: { good: 'நன்று', average: 'பரவாயில்லை', bad: 'சரியில்லை' },
+    status: {
+      5: '5.0 — அருமை! மிகவும் பிடித்தது',
+      4: '4.0 — நன்றாக இருந்தது!',
+      3: '3.0 — பரவாயில்லை, மேம்படுத்தலாம்',
+      2: '2.0 — சற்று ஏமாற்றம்',
+      1: '1.0 — மன்னிக்கவும்! உரிமையாளரிடம் நேரடியாக தெரிவிக்கவும்'
+    },
+    ctaHigh: 'Kural AI உடன் தொடரவும்',
+    ctaLow: 'நேரடி கருத்து அனுப்பவும்',
+    footerPrefix: 'தமிழ், Tanglish அல்லது ஆங்கிலத்தில் இயல்பாகப் பேசுங்கள் — ',
+    footerBold: 'Kural உங்கள் குரலை 10 வினாடிகளில் Google Review-ஆக மாற்றும்.',
+    meta: ['பேச்சு அல்லது தட்டு', 'Login தேவையில்லை', 'Kural (குரல்)']
   },
   en: {
+    eyebrow: 'SHARE YOUR EXPERIENCE',
     question: 'How was your experience today?',
-    ctaHigh: 'Continue & Write AI Review',
-    ctaLow: 'Send Private Feedback to Owner',
-    labels: {
-      5: '5.0 ★ — Super! Loved It',
-      4: '4.0 ★ — Good Quality & Service',
-      3: '3.0 ★ — Okay, Can Improve',
-      2: '2.0 ★ — Not Satisfied',
-      1: '1.0 ★ — Poor Experience'
-    }
+    moods: { good: 'Good', average: 'Average', bad: 'Bad' },
+    status: {
+      5: '5.0 — Super! Loved it',
+      4: '4.0 — Good quality & service',
+      3: '3.0 — Okay, room to improve',
+      2: '2.0 — Somewhat disappointed',
+      1: '1.0 — Sorry! Tell the owner directly'
+    },
+    ctaHigh: 'Continue with Kural AI',
+    ctaLow: 'Send Private Feedback',
+    footerPrefix: 'Speak naturally in Tamil, Tanglish, or English — ',
+    footerBold: 'Kural turns your voice into a polished Google Review in 10 seconds.',
+    meta: ['Voice or Tap', 'No Login Required', 'Kural (குரல்)']
   }
 };
 
-export const CustomerWelcome = () => {
-  const { business, setCustomerStep, setSelectedRating } = useApp();
-  const [lang, setLang] = useState('tanglish');
-  const [stars, setStars] = useState(5);
+const toTitleCase = (str = '') =>
+  str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase());
 
-  const copy = LANG_COPY[lang];
-  const initials = (business.name || 'K')
+export const CustomerWelcome = () => {
+  const { business, setCustomerStep, setSelectedRating, lang } = useApp();
+  const [stars, setStars] = useState(5);
+  const [logoError, setLogoError] = useState(false);
+
+  const copy = LANG_COPY[lang] || LANG_COPY.tanglish;
+  const displayName = toTitleCase(business.name || 'Aibaik Restaurant Theni');
+  const initials = displayName
     .split(' ')
     .slice(0, 2)
     .map((w) => w[0])
     .join('')
     .toUpperCase();
+
+  const activeMood = stars >= 4 ? 'good' : stars === 3 ? 'average' : 'bad';
+
+  const handleSelectMood = (mood) => {
+    const mapped = mood === 'good' ? 5 : mood === 'average' ? 3 : 1;
+    setStars(mapped);
+    setSelectedRating(mapped);
+  };
+
+  const handleSelectStar = (num) => {
+    setStars(num);
+    setSelectedRating(num);
+  };
 
   const handleContinue = () => {
     setSelectedRating(stars);
@@ -64,171 +97,158 @@ export const CustomerWelcome = () => {
   };
 
   return (
-    <div className="w-full flex flex-col gap-3.5 animate-fade-in">
-      {/* MAIN CARD: ROYAL BLUE BANNER + CRISP WHITE BODY */}
-      <div className="w-full bg-white rounded-3xl border border-slate-200/90 shadow-sm overflow-hidden">
-        {/* Top Royal Blue Banner */}
-        <div className="bg-gradient-to-br from-[#1E3A8A] via-[#1D4ED8] to-[#2563EB] p-5 text-white relative overflow-hidden">
-          {/* Subtle decorative orbs */}
-          <div className="absolute -top-10 -right-10 w-36 h-36 bg-white/10 rounded-full pointer-events-none" />
-          <div className="absolute -bottom-12 right-12 w-24 h-24 bg-white/10 rounded-full pointer-events-none" />
-
-          {/* Top Row: Kural Pill + Language Switcher */}
-          <div className="flex items-center justify-between gap-2 mb-5 relative z-10">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 backdrop-blur-xs border border-white/20 text-xs font-extrabold">
-              <span className="text-amber-400">★</span>
-              <span>Kural</span>
-              <span className="text-blue-100 font-bold">குரல்</span>
-              <span className="flex items-end gap-0.5 ml-0.5 h-3">
-                <span className="w-0.5 h-1.5 bg-amber-400 rounded-full" />
-                <span className="w-0.5 h-3 bg-amber-400 rounded-full" />
-                <span className="w-0.5 h-2 bg-amber-400 rounded-full" />
-              </span>
-            </div>
-
-            {/* Language Switcher Pill */}
-            <div className="inline-flex items-center bg-blue-950/40 p-0.5 rounded-full border border-white/15 text-[11px] font-bold">
-              {[
-                { id: 'tanglish', label: 'Tanglish' },
-                { id: 'tamil', label: 'தமிழ்' },
-                { id: 'en', label: 'EN' }
-              ].map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => setLang(item.id)}
-                  className={`px-2.5 py-1 rounded-full transition-all cursor-pointer ${
-                    lang === item.id
-                      ? 'bg-white text-[#1E3A8A] shadow-xs'
-                      : 'text-blue-100 hover:text-white'
-                  }`}
-                >
-                  {item.label}
-                </button>
-              ))}
-            </div>
+    <div className="w-full flex flex-col">
+      {/* SINGLE ELEVATED TACTILE WHITE SHEET */}
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+        className="mt-2 bg-white rounded-[32px] shadow-[0_20px_50px_rgba(15,23,42,0.06)] border border-black/[0.04] overflow-hidden"
+      >
+        {/* Editorial Shop Identity Header with Soft Royal Blue Tint */}
+        <div className="px-7 pt-7 pb-6 bg-gradient-to-r from-[#EFF6FF] to-[#F8FAFC] border-b border-blue-100/80 flex items-center gap-3.5 text-left">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#1E3A8A] to-[#2563EB] text-white font-bold tracking-tight text-base flex items-center justify-center shadow-md shadow-blue-900/20 shrink-0 overflow-hidden">
+            {business.logoUrl && !logoError ? (
+              <img
+                src={business.logoUrl}
+                alt={displayName}
+                onError={() => setLogoError(true)}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <span>{initials}</span>
+            )}
           </div>
-
-          {/* Business Identity Row */}
-          <div className="flex items-center gap-3.5 relative z-10 text-left">
-            <div className="w-14 h-14 rounded-2xl bg-[#FFFBEB] border-2 border-[#FDE68A] flex items-center justify-center shrink-0 overflow-hidden shadow-sm">
-              {business.logoUrl ? (
-                <img
-                  src={business.logoUrl}
-                  alt={business.name}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <span className="font-black text-[#1E3A8A] text-lg tracking-tight">
-                  {initials}
-                </span>
-              )}
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-1.5">
+              <h1 className="text-[19px] font-bold tracking-[-0.02em] text-slate-900 leading-tight truncate">
+                {displayName}
+              </h1>
+              <BadgeCheck className="w-4 h-4 text-[#059669] shrink-0" strokeWidth={1.75} />
             </div>
-
-            <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-2 flex-wrap">
-                <h1 className="text-lg sm:text-xl font-black text-white tracking-tight leading-tight truncate">
-                  {business.name}
-                </h1>
-                <span className="px-2 py-0.5 rounded-full bg-emerald-400/20 border border-emerald-300/40 text-emerald-200 text-[10px] font-bold">
-                  Verified
-                </span>
-              </div>
-              <p className="text-xs text-blue-100 font-medium mt-0.5 truncate">
-                {business.branch || 'Main Branch'} • {business.category || 'Local Business'}
-              </p>
-            </div>
+            <p className="text-xs text-slate-500 mt-0.5 font-medium">
+              Theni • {business.rating || '3.8'} ★ on Google ({business.totalReviews || 215}+ reviews)
+            </p>
           </div>
         </div>
 
-        {/* White Body: Interactive 5-Star Rating */}
-        <div className="p-6 text-center">
-          <h2 className="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight">
+        {/* Unified Tactile Star & Mood Interaction */}
+        <div className="px-7 py-8 text-center">
+          <div className="text-[11px] uppercase tracking-[0.12em] font-semibold text-slate-400 mb-2">
+            {copy.eyebrow}
+          </div>
+          <h2 className="text-[22px] font-bold tracking-[-0.02em] text-slate-900 leading-snug">
             {copy.question}
           </h2>
 
-          {/* 5 Interactive Amber Stars */}
-          <div className="flex items-center justify-center gap-2 sm:gap-3 my-5">
+          {/* 5 Floating Tactile Stars (No Square Borders) */}
+          <div className="flex items-center justify-center gap-3 my-6">
             {[1, 2, 3, 4, 5].map((num) => {
-              const isSelected = stars === num;
               const isFilled = num <= stars;
               return (
-                <button
+                <motion.button
                   key={num}
-                  onClick={() => setStars(num)}
-                  className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center transition-all cursor-pointer active:scale-95 ${
-                    isSelected
-                      ? 'bg-[#FFFBEB] border-2 border-[#FDE68A] shadow-xs scale-105'
-                      : 'hover:bg-slate-50 border border-transparent'
-                  }`}
+                  type="button"
+                  whileTap={{ scale: 0.85 }}
+                  whileHover={{ scale: 1.12 }}
+                  transition={{ type: 'spring', stiffness: 450, damping: 24 }}
+                  onClick={() => handleSelectStar(num)}
+                  className="w-11 h-11 flex items-center justify-center cursor-pointer focus:outline-none"
                   aria-label={`${num} stars`}
                 >
                   <svg
                     viewBox="0 0 24 24"
-                    className={`w-8 h-8 sm:w-9 sm:h-9 transition-colors ${
-                      isFilled ? 'text-[#F59E0B] fill-[#F59E0B]' : 'text-slate-200 fill-slate-200'
-                    }`}
+                    className="w-9 h-9 transition-colors duration-200"
+                    fill={isFilled ? '#F59E0B' : '#E2E8F0'}
+                    stroke={isFilled ? '#F59E0B' : '#E2E8F0'}
+                    strokeWidth="1.5"
+                    strokeLinejoin="round"
                   >
                     <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                   </svg>
+                </motion.button>
+              );
+            })}
+          </div>
+
+          {/* Single Morphing Sentiment Strip */}
+          <div className="inline-flex items-center bg-slate-100/80 p-1 rounded-full border border-slate-200/70 text-xs font-medium">
+            {[
+              {
+                id: 'good',
+                label: copy.moods.good,
+                activeClass: 'bg-[#EFF6FF] text-[#1E3A8A] ring-1 ring-[#2563EB]/30 font-semibold'
+              },
+              {
+                id: 'average',
+                label: copy.moods.average,
+                activeClass: 'bg-amber-50 text-amber-800 ring-1 ring-amber-300 font-semibold'
+              },
+              {
+                id: 'bad',
+                label: copy.moods.bad,
+                activeClass: 'bg-rose-50 text-rose-700 ring-1 ring-rose-300 font-semibold'
+              }
+            ].map((m) => {
+              const isActive = activeMood === m.id;
+              return (
+                <button
+                  key={m.id}
+                  type="button"
+                  onClick={() => handleSelectMood(m.id)}
+                  className={`relative px-4 py-1.5 rounded-full transition-all cursor-pointer ${
+                    isActive ? m.activeClass : 'text-slate-500 hover:text-slate-800'
+                  }`}
+                >
+                  {m.label}
                 </button>
               );
             })}
           </div>
 
-          {/* Dynamic Rating Label */}
-          <div className="text-sm font-extrabold text-[#D97706] mb-5">
-            {copy.labels[stars]}
-          </div>
+          {/* Smooth AnimatePresence Caption Line */}
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={`${stars}-${lang}`}
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4 }}
+              transition={{ duration: 0.18 }}
+              className="mt-3 text-xs font-semibold text-slate-600"
+            >
+              {copy.status[stars]}
+            </motion.p>
+          </AnimatePresence>
 
-          {/* Primary Action CTA */}
+          {/* Signature Royal Blue Gradient CTA Button */}
           <button
+            type="button"
             onClick={handleContinue}
-            className={`w-full py-3.5 px-5 rounded-2xl font-extrabold text-sm shadow-sm flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-[0.99] ${
-              stars >= 4
-                ? 'bg-[#1E40AF] hover:bg-[#1E3A8A] text-white'
-                : 'bg-rose-600 hover:bg-rose-700 text-white'
-            }`}
+            className="w-full mt-7 py-4 px-6 rounded-2xl bg-gradient-to-r from-[#1E3A8A] to-[#2563EB] hover:from-[#172554] hover:to-[#1D4ED8] text-white font-semibold text-[15px] tracking-[-0.01em] shadow-lg shadow-blue-600/25 flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-[0.99]"
           >
             <span>{stars >= 4 ? copy.ctaHigh : copy.ctaLow}</span>
-            <ArrowRight className="w-4 h-4" />
+            <ArrowRight className="w-4 h-4" strokeWidth={1.75} />
           </button>
-
-          {/* Trust Footnote */}
-          <div className="flex items-center justify-center gap-2 text-[11px] text-slate-500 font-semibold mt-4 pt-3 border-t border-slate-100">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-            <span>No login needed • 100% Secure</span>
-          </div>
         </div>
-      </div>
+      </motion.div>
 
-      {/* HOW KURAL WORKS 3-STEP STRIP */}
-      <div className="w-full bg-white rounded-3xl border border-slate-200/90 shadow-xs p-4">
-        <div className="grid grid-cols-3 gap-2 text-center">
-          <div className="p-2.5 rounded-2xl bg-slate-50 border border-slate-100 flex flex-col items-center">
-            <div className="w-8 h-8 rounded-xl bg-blue-50 text-[#1E40AF] flex items-center justify-center mb-1.5">
-              <Mic className="w-4 h-4" />
-            </div>
-            <div className="text-[11px] font-extrabold text-slate-900">1. Speak / Tap</div>
-            <div className="text-[9.5px] text-slate-500 font-medium mt-0.5">Tamil or English</div>
-          </div>
+      {/* Borderless "About Kural" Brand Signature */}
+      <footer className="max-w-[420px] mx-auto px-7 pt-6 pb-8 text-center">
+        <p className="text-xs leading-relaxed text-slate-500">
+          {copy.footerPrefix}
+          <span className="text-[#1E3A8A] font-semibold">{copy.footerBold}</span>
+        </p>
 
-          <div className="p-2.5 rounded-2xl bg-slate-50 border border-slate-100 flex flex-col items-center">
-            <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center mb-1.5">
-              <Sparkles className="w-4 h-4" />
-            </div>
-            <div className="text-[11px] font-extrabold text-slate-900">2. AI Drafts</div>
-            <div className="text-[9.5px] text-slate-500 font-medium mt-0.5">SEO-ready text</div>
-          </div>
+        <div className="w-8 h-[1px] bg-blue-200/80 mx-auto my-4" />
 
-          <div className="p-2.5 rounded-2xl bg-slate-50 border border-slate-100 flex flex-col items-center">
-            <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-1.5">
-              <Send className="w-4 h-4" />
-            </div>
-            <div className="text-[11px] font-extrabold text-slate-900">3. 1-Tap Post</div>
-            <div className="text-[9.5px] text-slate-500 font-medium mt-0.5">Copy &amp; Open</div>
-          </div>
+        <div className="flex items-center justify-center gap-3 text-[11px] font-medium text-slate-400">
+          <span>{copy.meta[0]}</span>
+          <span>•</span>
+          <span>{copy.meta[1]}</span>
+          <span>•</span>
+          <span className="text-[#1E3A8A] font-semibold">{copy.meta[2]}</span>
         </div>
-      </div>
+      </footer>
     </div>
   );
 };

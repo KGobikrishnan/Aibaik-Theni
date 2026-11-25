@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { NEGATIVE_ISSUE_TAGS } from '../../data/mockData';
 import { ArrowLeft, ShieldAlert, CheckCircle2, Send, AlertTriangle } from 'lucide-react';

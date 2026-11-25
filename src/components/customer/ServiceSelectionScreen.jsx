@@ -1,4 +1,3 @@
-import React from 'react';
 import { useApp } from '../../context/AppContext';
 import { BARANI_SERVICES } from '../../data/mockData';
 import {

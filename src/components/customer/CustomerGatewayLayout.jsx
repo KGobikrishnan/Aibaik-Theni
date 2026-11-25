@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
 import { CustomerHeader } from './CustomerHeader';
@@ -20,26 +20,34 @@ export const CustomerGatewayLayout = () => {
   }, [shopSlug, loadMerchantBySlug]);
 
   return (
-    <div className="min-h-screen bg-[#F1F5F9] text-slate-900 font-sans flex flex-col justify-between selection:bg-blue-700 selection:text-white relative">
-      {/* Top Bar */}
+    <div className="min-h-screen bg-[#F0F4FF] bg-[radial-gradient(ellipse_at_top,_rgba(37,99,235,0.12),_transparent_60%)] text-slate-900 font-sans selection:bg-[#1E3A8A] selection:text-white flex flex-col">
+      {/* Minimalist Top Navigation */}
       <CustomerHeader />
 
-      {/* Main Centered App Shell */}
-      <main className="w-full max-w-[460px] mx-auto flex-1 flex flex-col pt-1 pb-8 px-3.5 relative z-10">
+      {/* Main Centered Content */}
+      <main className="w-full max-w-[420px] mx-auto flex-1 flex flex-col px-4 pt-2">
         {customerStep === 'welcome' && <CustomerWelcome />}
-        {customerStep === 'services_selection' && <ServiceSelectionScreen />}
-        {customerStep === 'good_features' && <FeatureSelectionScreen />}
-        {customerStep === 'good_ai_draft' && <ReviewDraftScreen />}
-        {customerStep === 'bad_questions' && <BadFlowQuestions />}
+        {customerStep === 'services_selection' && (
+          <div className="py-4">
+            <ServiceSelectionScreen />
+          </div>
+        )}
+        {customerStep === 'good_features' && (
+          <div className="py-4">
+            <FeatureSelectionScreen />
+          </div>
+        )}
+        {customerStep === 'good_ai_draft' && (
+          <div className="py-4">
+            <ReviewDraftScreen />
+          </div>
+        )}
+        {customerStep === 'bad_questions' && (
+          <div className="py-4">
+            <BadFlowQuestions />
+          </div>
+        )}
       </main>
-
-      {/* Clean Footer */}
-      <footer className="w-full py-4 px-4 text-center relative z-10">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200 text-[11px] font-semibold text-slate-500 shadow-2xs">
-          <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-          <span>Powered by <strong className="text-slate-900">Kural (குரல்)</strong> • Your Customer&apos;s Voice</span>
-        </div>
-      </footer>
 
       {/* Google Review Modal overlay */}
       <SimulatedGoogleReviewModal />

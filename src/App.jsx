@@ -1,12 +1,16 @@
-import React from 'react';
+import { useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { CustomerGatewayLayout } from './components/customer/CustomerGatewayLayout';
 import { Services } from './pages/Services';
 import { Reviews } from './pages/Reviews';
+import { SplashScreen } from './components/common/SplashScreen';
 
 function App() {
+  const [showSplash, setShowSplash] = useState(true);
+
   return (
     <BrowserRouter>
+      {showSplash && <SplashScreen onFinish={() => setShowSplash(false)} />}
       <Routes>
         {/* Main User Review Flow on root */}
         <Route path="/" element={<CustomerGatewayLayout />} />
@@ -14,10 +18,10 @@ function App() {
         {/* Dynamic Shop URL Review Flow: /r/:shopSlug */}
         <Route path="/r/:shopSlug" element={<CustomerGatewayLayout />} />
 
-        {/* Barani car Accessories Services Page */}
+        {/* Services Page */}
         <Route path="/services" element={<Services />} />
 
-        {/* Barani car Accessories Reviews & Testimonials Page */}
+        {/* Reviews & Testimonials Page */}
         <Route path="/reviews" element={<Reviews />} />
 
         {/* Catch-all redirect to user panel */}

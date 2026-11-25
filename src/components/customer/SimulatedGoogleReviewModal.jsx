@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import confetti from 'canvas-confetti';
 import { Copy, Check, ExternalLink, Star, X, CheckCircle2, Heart } from 'lucide-react';
@@ -17,7 +17,6 @@ export const SimulatedGoogleReviewModal = () => {
 
   useEffect(() => {
     if (showGoogleModal) {
-      setIsSubmitted(false);
       confetti({
         particleCount: 45,
         spread: 55,

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
 import {
   ArrowLeft,
@@ -31,7 +31,7 @@ export const ReviewDraftScreen = () => {
 
   const serviceContext = selectedServices && selectedServices.length > 0
     ? selectedServices.join(' & ')
-    : 'car modifications & accessories';
+    : 'Al Faham BBQ, Shawarma & Mandi Biryani';
 
   const is5Star = Number(selectedRating) >= 5;
 

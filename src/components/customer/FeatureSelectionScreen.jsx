@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import {
   DollarSign,
@@ -18,14 +18,14 @@ import {
 } from 'lucide-react';
 
 const HIGHLIGHT_OPTIONS = [
-  { id: 'modifications', title: 'Custom Modifications', icon: Wrench },
-  { id: 'audio_lighting', title: 'Audio & Lighting', icon: Volume2 },
-  { id: 'accessories', title: 'Car Accessories', icon: Sparkles },
-  { id: 'workmanship', title: 'Clean Finish', icon: Star },
-  { id: 'pricing', title: 'Fair Pricing', icon: DollarSign },
-  { id: 'fast', title: 'Fast & On-Time', icon: Clock },
-  { id: 'detailing', title: 'Detailing & Polish', icon: SprayCan },
-  { id: 'trust', title: 'Friendly Staff', icon: ThumbsUp }
+  { id: 'charcoal_bbq', title: 'Charcoal BBQ & Grills', icon: Wrench },
+  { id: 'shawarma_mandi', title: 'Shawarma & Mandi', icon: Volume2 },
+  { id: 'taste_freshness', title: 'Taste & Freshness', icon: Sparkles },
+  { id: 'portion_value', title: 'Portion & Pricing', icon: DollarSign },
+  { id: 'fast_service', title: 'Fast Service', icon: Clock },
+  { id: 'family_ambience', title: 'Family Ambience', icon: Star },
+  { id: 'hygiene', title: 'Hygienic Dining', icon: SprayCan },
+  { id: 'friendly_staff', title: 'Friendly Staff', icon: ThumbsUp }
 ];
 
 export const FeatureSelectionScreen = () => {
@@ -194,7 +194,7 @@ export const FeatureSelectionScreen = () => {
             maxLength={100}
             value={customerComment}
             onChange={(e) => setCustomerComment(e.target.value)}
-            placeholder="e.g. Service romba nalla irunthuchu..."
+            placeholder="e.g. Al Faham BBQ Chicken & Shawarma romba super!"
             className="flex-1 text-xs p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-[#1E40AF] focus:bg-white text-slate-900 placeholder-slate-400 transition-all"
           />
           <button

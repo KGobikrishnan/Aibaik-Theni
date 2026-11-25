@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import QRCodeStyling from 'qr-code-styling';
 
 // Helper function to create QRCodeStyling instance with our official Kural dot & curve design

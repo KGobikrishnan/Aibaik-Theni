@@ -8,8 +8,8 @@ import { generateSmartReviewSuite } from '../data/reviewGenerator';
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || '';
 
 export const generateGeminiReview = async ({
-  businessName = "Barani car Accessories",
-  businessCategory = "Car Modifications & Accessories",
+  businessName = "Aibaik Restaurant Theni",
+  businessCategory = "Arabian BBQ, Shawarma & Family Dining",
   selectedServices = [],
   tags = [],
   customerComment = "",
@@ -28,21 +28,21 @@ export const generateGeminiReview = async ({
     });
   }
 
-  const prompt = `You are a real customer writing authentic Google reviews for "${businessName}" located in Cumbum, Theni District, Tamil Nadu.
+  const prompt = `You are a real customer writing authentic Google reviews for "${businessName}" located opposite Vetri Cinemas, Theni, Tamil Nadu.
 Business Specialty: ${businessCategory}.
 Customer Rating: ${rating} out of 5 stars.
-Services Availed: ${selectedServices.length > 0 ? selectedServices.join(', ') : 'Car modifications and accessories'}.
-Specific Highlights: ${tags.length > 0 ? tags.join(', ') : 'Workmanship and quality'}.
+Dishes / Items Ordered: ${selectedServices.length > 0 ? selectedServices.join(', ') : 'Al Faham BBQ Chicken, Shawarma, and Mandi Biryani'}.
+Specific Highlights: ${tags.length > 0 ? tags.join(', ') : 'Taste, freshness, and hospitality'}.
 Customer Extra Notes: ${customerComment ? customerComment : 'None'}.
 
-Generate 4 natural, realistic, high-converting review variations in English with local Tamil Nadu context (Theni, Cumbum, bypass driving, fitment perfection).
+Generate 4 natural, realistic, high-converting review variations in English with local Theni context (Vetri Cinemas opposite, family dining, charcoal-grilled BBQ).
 Return ONLY a valid JSON object with the following structure and no markdown formatting:
 {
-  "seo": "A review rich in local keywords like Cumbum, alloy wheels, car accessories, clean wiring",
-  "enthusiastic": "An excited, highly passionate review with emojis",
+  "seo": "A review rich in local keywords like Aibaik Restaurant Theni, Al Faham BBQ, Shawarma, Mandi Biryani, family restaurant in Theni",
+  "enthusiastic": "An excited, highly passionate foodie review with emojis",
   "short": "A crisp, concise 2-sentence review",
-  "detailed": "A comprehensive paragraph describing the work, time, and quality",
-  "keywords": ["5 local keyword phrases like 'Barani car Accessories Cumbum', 'alloy wheels Theni'"]
+  "detailed": "A comprehensive paragraph describing the food taste, ambience, and service",
+  "keywords": ["5 local keyword phrases like 'Aibaik Restaurant Theni', 'Al Faham BBQ Theni', 'Best Shawarma in Theni'"]
 }`;
 
   try {
@@ -84,7 +84,7 @@ Return ONLY a valid JSON object with the following structure and no markdown for
           short: parsed.short,
           detailed: parsed.detailed
         },
-        keywords: parsed.keywords || ['Barani car Accessories Cumbum', 'car accessories', 'alloy wheels']
+        keywords: parsed.keywords || ['Aibaik Restaurant Theni', 'Al Faham BBQ Theni', 'Shawarma Theni']
       };
     }
   } catch (err) {

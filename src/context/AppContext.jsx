@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 import { api } from '../services/api';
 import { INITIAL_BUSINESS } from '../data/mockData';
 
@@ -18,6 +18,7 @@ export const AppProvider = ({ children }) => {
   const [isGeneratingAi, setIsGeneratingAi] = useState(false);
   const [showGoogleModal, setShowGoogleModal] = useState(false);
   const [copiedReviewText, setCopiedReviewText] = useState(false);
+  const [lang, setLang] = useState('tanglish');
 
   // Active Business Profile State
   const [business, setBusiness] = useState(INITIAL_BUSINESS);
@@ -136,7 +137,9 @@ export const AppProvider = ({ children }) => {
         setBusiness,
         loadMerchantBySlug,
         submitBadFeedback,
-        resetCustomerFlow
+        resetCustomerFlow,
+        lang,
+        setLang
       }}
     >
       {children}
