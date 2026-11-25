@@ -20,17 +20,12 @@ export const CustomerGatewayLayout = () => {
   }, [shopSlug, loadMerchantBySlug]);
 
   return (
-    <div className="min-h-screen bg-[#09090B] text-zinc-100 font-sans flex flex-col justify-between selection:bg-amber-400 selection:text-zinc-950 relative overflow-hidden">
-      {/* Ambient Luxury Aurora Glows */}
-      <div className="fixed -top-32 left-1/2 -translate-x-1/2 w-[560px] h-[340px] bg-gradient-to-tr from-indigo-600/25 via-amber-500/15 to-emerald-500/20 blur-[110px] pointer-events-none rounded-full animate-pulse-glow" />
-      <div className="fixed bottom-0 -right-24 w-96 h-96 bg-amber-500/10 blur-[120px] pointer-events-none rounded-full" />
-      <div className="fixed top-1/2 -left-24 w-80 h-80 bg-indigo-600/10 blur-[120px] pointer-events-none rounded-full" />
-
-      {/* Top Floating Glass Header */}
+    <div className="min-h-screen bg-[#F1F5F9] text-slate-900 font-sans flex flex-col justify-between selection:bg-blue-700 selection:text-white relative">
+      {/* Top Bar */}
       <CustomerHeader />
 
       {/* Main Centered App Shell */}
-      <main className="w-full max-w-[480px] mx-auto flex-1 flex flex-col pt-2 pb-10 px-4 relative z-10">
+      <main className="w-full max-w-[460px] mx-auto flex-1 flex flex-col pt-1 pb-8 px-3.5 relative z-10">
         {customerStep === 'welcome' && <CustomerWelcome />}
         {customerStep === 'services_selection' && <ServiceSelectionScreen />}
         {customerStep === 'good_features' && <FeatureSelectionScreen />}
@@ -38,11 +33,11 @@ export const CustomerGatewayLayout = () => {
         {customerStep === 'bad_questions' && <BadFlowQuestions />}
       </main>
 
-      {/* Luxury Powered-by Footer */}
+      {/* Clean Footer */}
       <footer className="w-full py-4 px-4 text-center relative z-10">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-pill text-[11px] font-semibold text-zinc-400">
-          <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.8)]" />
-          <span>Powered by <strong className="text-zinc-100">Kural (குரல்)</strong> • AI Review Studio</span>
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200 text-[11px] font-semibold text-slate-500 shadow-2xs">
+          <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+          <span>Powered by <strong className="text-slate-900">Kural (குரல்)</strong> • Your Customer&apos;s Voice</span>
         </div>
       </footer>
 
